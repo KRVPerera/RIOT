@@ -131,7 +131,7 @@ int lpsxxx_init(lpsxxx_t *dev, const lpsxxx_params_t * params)
 int lpsxxx_read_temp(const lpsxxx_t *dev, int16_t *temp)
 {
     uint8_t tmp;
-    int32_t val = 0;
+    int16_t val = 0;
     uint16_t res = TEMP_BASE;      /* reference value -> see datasheet */
 
     i2c_acquire(DEV_I2C);
@@ -150,7 +150,7 @@ int lpsxxx_read_temp(const lpsxxx_t *dev, int16_t *temp)
     i2c_release(DEV_I2C);
     val |= ((uint16_t)tmp << 8);
 
-    DEBUG("[lpsxxx] read_temp: raw data %08" PRIx32 "\n", val);
+    DEBUG("[lpsxxx] read_temp: raw data %08" PRIx16 "\n", val);
 
     /* convert val to c°C */
     val *= 100;
