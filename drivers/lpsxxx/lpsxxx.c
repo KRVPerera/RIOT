@@ -153,10 +153,10 @@ int lpsxxx_read_temp(const lpsxxx_t *dev, int16_t *temp)
     DEBUG("[lpsxxx] read_temp: raw data %08" PRIx16 "\n", val);
 
     /* convert val to c°C */
-    val *= 100;
+    int32_t val_32t = (int32_t)val * 100;
 
     /* compute actual temperature value in c°C */
-    res += DIV_ROUND(val, TEMP_DIVIDER);
+    res += DIV_ROUND(val_32t, TEMP_DIVIDER);
 
     *temp = res;
     return LPSXXX_OK;
