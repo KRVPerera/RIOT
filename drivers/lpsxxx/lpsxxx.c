@@ -128,6 +128,18 @@ int lpsxxx_init(lpsxxx_t *dev, const lpsxxx_params_t * params)
     return LPSXXX_OK;
 }
 
+int lpsxxx_write_res_conf(const lpsxxx_t *dev, uint8_t value) {
+    i2c_acquire(DEV_I2C);
+    if (i2c_write_reg(DEV_I2C, DEV_ADDR, LPSXXX_REG_RES_CONF, value, 0) < 0) {
+        i2c_release(DEV_I2C);
+        DEBUG("[lpsxxx] set: cannot set LPSXXX_REG_RES_CONF register\n");
+        return -LPSXXX_ERR_I2C;
+    }
+    i2c_release(DEV_I2C);
+    
+    return LPSXXX_OK; // Success
+}
+
 int lpsxxx_read_temp(const lpsxxx_t *dev, int16_t *temp)
 {
     uint8_t tmp;

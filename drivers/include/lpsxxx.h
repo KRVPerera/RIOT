@@ -161,6 +161,17 @@ int lpsxxx_read_pres(const lpsxxx_t *dev, uint16_t *pres);
 int lpsxxx_enable(const lpsxxx_t *dev);
 
 /**
+ * @brief   Write value to LPSXXX_REG_RES_CONF 
+ *
+ * @param[in] dev       device descriptor of sensor to enable
+ * @param[in] value     value to write to LPSXXX_REG_RES_CONF  
+ *
+ * @return              LPSXXX_OK on success
+ * @return              -LPSXXX_ERR_I2C on I2C error
+ */
+int lpsxxx_write_res_conf(const lpsxxx_t *dev, uint8_t value);
+
+/**
  * @brief   Disable the given sensor
  *
  * @param[in] dev       device descriptor of sensor to disable
