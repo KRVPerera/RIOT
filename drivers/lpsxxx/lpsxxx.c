@@ -136,11 +136,45 @@ int lpsxxx_write_res_conf(const lpsxxx_t *dev, uint8_t value) {
         return -LPSXXX_ERR_I2C;
     }
     i2c_release(DEV_I2C);
-    
+
     return LPSXXX_OK; // Success
 }
 
 int lpsxxx_read_temp(const lpsxxx_t *dev, int16_t *temp)
+{
+    uint8_t tmp;
+    int32_t val = 0;
+    uint16_t res = TEMP_BASE;      /* reference value -> see datasheet */
+
+    i2c_acquire(DEV_I2C);
+    if (i2c_read_reg(DEV_I2C, DEV_ADDR, LPSXXX_REG_TEMP_OUT_L, &tmp, 0) < 0) {
+        i2c_release(DEV_I2C);
+        DEBUG("[lpsxxx] read_temp: cannot read TEMP_OUT_L register\n");
+        return -LPSXXX_ERR_I2C;
+    }
+    val |= tmp;
+
+    if (i2c_read_reg(DEV_I2C, DEV_ADDR, LPSXXX_REG_TEMP_OUT_H, &tmp, 0) < 0) {
+        i2c_release(DEV_I2C);
+        DEBUG("[lpsxxx] read_temp: cannot read TEMP_OUT_H register\n");
+        return -LPSXXX_ERR_I2C;
+    }
+    i2c_release(DEV_I2C);
+    val |= ((uint16_t)tmp << 8);
+
+    DEBUG("[lpsxxx] read_temp: raw data %08" PRIx32 "\n", val);
+
+    /* convert val to c°C */
+    val *= 100;
+
+    /* compute actual temperature value in c°C */
+    res += DIV_ROUND(val, TEMP_DIVIDER);
+
+    *temp = res;
+    return LPSXXX_OK;
+}
+
+int lpsxxx_read_temp_gp12(const lpsxxx_t *dev, int16_t *temp)
 {
     uint8_t tmp;
     int16_t val = 0;

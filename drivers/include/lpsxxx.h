@@ -140,6 +140,17 @@ int lpsxxx_init(lpsxxx_t *dev, const lpsxxx_params_t *params);
 int lpsxxx_read_temp(const lpsxxx_t *dev, int16_t *temp);
 
 /**
+ * @brief   Read a temperature value from the given sensor, returned in c°C
+ *
+ * @param[in] dev       device descriptor of sensor to read from
+ * @param[out] temp     temperature value in c°C
+ *
+ * @return              LPSXXX_OK on success
+ * @return              -LPSXXX_ERR_I2C on I2C error
+ */
+int lpsxxx_read_temp_gp12(const lpsxxx_t *dev, int16_t *temp);
+
+/**
  * @brief   Read a pressure value from the given sensor, returned in hPa
  *
  * @param[in] dev       device descriptor of sensor to read from
